@@ -140,5 +140,10 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "systemjs": "^6.14.1",
+    "webpack-merge": "^5.9.0"
   }
 }

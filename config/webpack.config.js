@@ -25,8 +25,11 @@ const ForkTsCheckerWebpackPlugin =
     ? require('react-dev-utils/ForkTsCheckerWarningWebpackPlugin')
     : require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const { merge } = require('webpack-merge')
 
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+
+const webpackCustomConfig = require('./webpack.config.custom');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -186,7 +189,7 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  return {
+  const craConfig = {
     target: ['browserslist'],
     // Webpack noise constrained to errors and warnings
     stats: 'errors-warnings',
@@ -568,8 +571,11 @@ module.exports = function (webpackEnv) {
         Object.assign(
           {},
           {
-            inject: true,
+            inject: false,
             template: paths.appHtml,
+            templateParameters: {
+              isEnvProduction
+            },
           },
           isEnvProduction
             ? {
@@ -752,4 +758,6 @@ module.exports = function (webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
+
+  return merge(craConfig, webpackCustomConfig(webpackEnv))
 };
